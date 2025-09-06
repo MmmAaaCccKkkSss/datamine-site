@@ -27,12 +27,12 @@
 <body>
   <div class="card">
     <h1>DATAMINE — Claim Airdrop</h1>
-    <p class="muted">Réclame tes <b>DATA</b> en connectant ton wallet Polygon (chain 137). Cette page appelle uniquement <code>claim(uint256, bytes32[])</code> du contrat MerkleDistributor.</p>
+    <p class="muted">Réclame tes <b>DATA</b> en connectant ton wallet Polygon (chain 137). La page appelle uniquement <code>claim(uint256, bytes32[])</code> du contrat MerkleDistributor.</p>
 
     <div class="diag" id="diag">Diagnostic: chargement…</div>
 
     <label>Adresse du MerkleDistributor</label>
-    <input id="distributor" type="text" value="" placeholder="0xAdresseDuMerkleDistributor" />
+    <input id="distributor" type="text" value="0x36073810B663210E28cb7960D0Df68517BCfA33d" />
 
     <label>URL de <code>claims.json</code></label>
     <input id="claimsUrl" type="text" value="https://mmmaaaccckkksss.github.io/datamine-site/claims.json" />
@@ -59,12 +59,14 @@
     </div>
 
     <p class="small" style="margin-top:14px">
-      Quand le MerkleDistributor sera déployé et approvisionné en DATA, colle son adresse 0x… ci-dessus, recharge l’allocation et clique “Claim”.
+      Si “invalid proof” apparaît : regénère `claims.json` + `merkle-root.txt` ensemble et redéploie le MerkleDistributor avec le nouveau root.  
+      Si “transfer failed” : envoie plus de DATA au contrat.
     </p>
   </div>
 
   <!-- Ethers.js v5 (CDN) -->
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js" crossorigin="anonymous"></script>
+  <!-- Script applicatif -->
   <script src="./claim.js" defer></script>
 </body>
 </html>
