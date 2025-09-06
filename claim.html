@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>DATAMINE — Claim Airdrop</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, Helvetica, sans-serif; margin: 0; padding: 24px; background:#0b0b12; color:#e9ecf5;}
+    .card { max-width: 760px; margin: 0 auto; border: 1px solid #1f1f36; border-radius: 14px; padding: 24px; background:#141423; box-shadow:0 6px 28px rgba(0,0,0,.35);}
+    h1 { margin-top: 0; }
+    label { display:block; font-size:14px; margin: 12px 0 6px; color:#cdd3ea;}
+    input[type="text"] { width:100%; padding:10px 12px; border:1px solid #2b2b4a; border-radius:10px; font-size:14px; background:#0f1020; color:#dfe3f7;}
+    button { padding:12px 16px; border:0; border-radius:10px; cursor:pointer; font-weight:600; }
+    .primary { background:#6b5bff; color:#fff; }
+    .ghost { background:#1a1a33; color:#dfe3f7; }
+    .row { display:flex; gap:12px; align-items:center; flex-wrap: wrap; }
+    .muted { color:#9aa0b3; font-size:13px; }
+    .ok { color:#1BC7B1; }
+    .warn { color:#ffb74d; }
+    .err { color:#ff6b6b; }
+    .mono { font-family: ui-monospace, SFMono, Menlo, Consolas, monospace; }
+    .hr { height:1px; background:#1f1f36; margin: 16px 0; }
+    .small { font-size:12px; color:#9aa0b3;}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>DATAMINE — Claim Airdrop</h1>
+    <p class="muted">Réclame tes <b>DATA</b> en connectant ton wallet Polygon (chain 137). Cette page appelle uniquement <code>claim(uint256, bytes32[])</code> du contrat <i>MerkleDistributor</i>.</p>
+
+    <!-- Paramètres par défaut : tu peux les laisser ainsi (tu pourras les changer dans la page une fois en ligne) -->
+    <label>Adresse du MerkleDistributor</label>
+    <input id="distributor" type="text" value="0xMERKLE_DISTRIBUTOR_ADDRESS_ICI" />
+
+    <label>URL de <code>claims.json</code> (laisse <code>./claims.json</code> si tu le places à la racine du site)</label>
+    <input id="claimsUrl" type="text" value="./claims.json" />
+
+    <div class="row" style="margin-top:16px">
+      <button id="connectBtn" class="primary">1) Connecter mon wallet</button>
+      <span id="addr" class="mono muted"></span>
+    </div>
+
+    <div id="networkBox" class="muted" style="margin-top:10px"></div>
+    <div class="hr"></div>
+
+    <div class="row">
+      <button id="loadBtn" class
