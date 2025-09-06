@@ -123,7 +123,6 @@ async function loadAllocation() {
 async function doClaim() {
   statusEl.textContent = 'Préparation…';
   const distributorAddr = (document.getElementById('distributor').value||'').trim();
-  const claimsUrl = (document.getElementById('claimsUrl').value||'').trim();
   if (!account || !signer) { alert('Connecte ton wallet.'); statusEl.textContent=''; return; }
   if (!isHexAddress(distributorAddr)) { alert('Adresse du MerkleDistributor invalide (format 0x…)'); statusEl.textContent=''; return; }
   if (!claimsMap) { await loadAllocation(); if (!claimsMap) return; }
