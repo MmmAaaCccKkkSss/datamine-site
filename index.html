@@ -28,7 +28,7 @@
     .mono{font-family:ui-monospace,SFMono,Menlo,Consolas,monospace;color:#cdd3ea;word-break:break-all}
     .tag{display:inline-block;background:#1e2040;color:#c9d1ff;border:1px solid #2a2c5c;padding:4px 8px;border-radius:999px;font-size:12px;margin-right:6px}
     .footer{margin-top:28px;color:#7f86a8;font-size:13px}
-    .addr{display:flex;align-items:center;gap:8px}
+    .addr{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
     .copy{cursor:pointer;border:1px solid #2b2b4a;background:#1a1a33;color:#bfc6e8;border-radius:8px;padding:6px 8px;font-size:12px}
   </style>
 </head>
@@ -38,8 +38,8 @@
       <h1>DATAMINE — $DATA sur Polygon</h1>
       <p>Reprends le contrôle de tes données. Un écosystème Web3 où l’utilisateur choisit ce qu’il partage et monétise ses données. $DATA est le jeton utilitaire du protocole.</p>
       <div class="btns">
-        <a class="btn primary" href="https://quickswap.exchange/#/swap?inputCurrency=0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359&outputCurrency=0x79E1424617B0BeC83Ac00B59D39ED922e55E09f6" target="_blank" rel="noopener">Acheter $DATA (QuickSwap)</a>
-        <a class="btn ghost" href="https://dexscreener.com/polygon/0x6c2f35a80d219d48f30115537b549dcdcd321ad3" target="_blank" rel="noopener">Voir la pool (DexScreener)</a>
+        <a class="btn primary" href="https://dapp.quickswap.exchange/#/swap?inputCurrency=0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359&outputCurrency=0x79E1424617B0BeC83Ac00B59D39ED922e55E09f6" target="_blank" rel="noopener">Acheter $DATA (QuickSwap)</a>
+        <a class="btn ghost" href="https://www.geckoterminal.com/polygon_pos/pools/0x6c2f35a80d219d48f30115537b549dcdcd321ad3" target="_blank" rel="noopener">Voir la pool (GeckoTerminal)</a>
         <a class="btn ghost" href="https://polygonscan.com/token/0x79E1424617B0BeC83Ac00B59D39ED922e55E09f6" target="_blank" rel="noopener">Contrat sur Polygonscan</a>
       </div>
     </div>
@@ -51,18 +51,30 @@
         <p><span class="tag">Symbole</span> DATA</p>
         <p><span class="tag">Réseau</span> Polygon (POL), Chain ID 137</p>
         <p><span class="tag">Supply</span> 1&nbsp;000&nbsp;000&nbsp;000 DATA (fixe)</p>
-        <p class="addr"><span class="tag">Adresse</span> <span class="mono" id="dataAddr">0x79E1424617B0BeC83Ac00B59D39ED922e55E09f6</span>
-          <button class="copy" onclick="navigator.clipboard.writeText(document.getElementById('dataAddr').innerText)">Copier</button></p>
+        <p class="addr">
+          <span class="tag">Adresse</span>
+          <span class="mono" id="dataAddr">0x79E1424617B0BeC83Ac00B59D39ED922e55E09f6</span>
+          <button class="copy" onclick="navigator.clipboard.writeText(document.getElementById('dataAddr').innerText)">Copier</button>
+          <button class="copy" onclick="addToMM()">Ajouter à MetaMask</button>
+        </p>
       </div>
 
       <div class="card">
         <h3 style="color:#fff;margin-top:0">Acheter / Échanger</h3>
         <p>Pair officielle : <b>DATA / USDC (native)</b></p>
-        <p class="addr"><span class="tag">USDC</span> <span class="mono" id="usdcAddr">0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359</span>
-          <button class="copy" onclick="navigator.clipboard.writeText(document.getElementById('usdcAddr').innerText)">Copier</button></p>
-        <p class="addr"><span class="tag">Pool</span> <span class="mono" id="poolAddr">0x6c2f35a80d219d48f30115537b549dcdcd321ad3</span>
-          <button class="copy" onclick="navigator.clipboard.writeText(document.getElementById('poolAddr').innerText)">Copier</button></p>
-        <p><a class="btn primary" href="https://quickswap.exchange/#/swap?inputCurrency=0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359&outputCurrency=0x79E1424617B0BeC83Ac00B59D39ED922e55E09f6" target="_blank" rel="noopener">Swap USDC → DATA</a></p>
+        <p class="addr">
+          <span class="tag">USDC</span>
+          <span class="mono" id="usdcAddr">0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359</span>
+          <button class="copy" onclick="navigator.clipboard.writeText(document.getElementById('usdcAddr').innerText)">Copier</button>
+        </p>
+        <p class="addr">
+          <span class="tag">Pool</span>
+          <span class="mono" id="poolAddr">0x6c2f35a80d219d48f30115537b549dcdcd321ad3</span>
+          <button class="copy" onclick="navigator.clipboard.writeText(document.getElementById('poolAddr').innerText)">Copier</button>
+        </p>
+        <p>
+          <a class="btn primary" href="https://dapp.quickswap.exchange/#/swap?inputCurrency=0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359&outputCurrency=0x79E1424617B0BeC83Ac00B59D39ED922e55E09f6" target="_blank" rel="noopener">Swap USDC → DATA</a>
+        </p>
       </div>
 
       <div class="card">
@@ -83,8 +95,27 @@
     </div>
 
     <div class="footer">
-      © DATAMINE — Polygon • Suivre les annonces : bientôt X / Telegram.
+      © DATAMINE — Polygon • Annonces : prochainement X / Telegram.
     </div>
   </div>
+
+  <script>
+    async function addToMM(){
+      if(!window.ethereum){ alert("MetaMask non détecté."); return; }
+      try{
+        await window.ethereum.request({
+          method: 'wallet_watchAsset',
+          params: {
+            type: 'ERC20',
+            options: {
+              address: '0x79E1424617B0BeC83Ac00B59D39ED922e55E09f6',
+              symbol: 'DATA',
+              decimals: 18
+            }
+          }
+        });
+      }catch(e){ alert('Ajout refusé: ' + (e?.message||e)); }
+    }
+  </script>
 </body>
 </html>
