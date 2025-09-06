@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>DATAMINE — Reprends le contrôle de tes données</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Datamine ($DATA) — Token utilitaire sur Polygon. Reprends le contrôle de tes données et monétise-les." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#0b0b12; --card:#141423; --muted:#9aa0b3; --text:#e9ecf5;
+      --primary:#6b5bff; --accent:#1bc7b1; --ok:#0a7d2e; --warn:#b46a00; --err:#c62828;
+      --radius:14px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#0b0b12,#0f1020);}
+    .wrap{max-width:1100px;margin:0 auto;padding:28px}
+    .hero{display:flex;flex-direction:column;gap:16px;align-items:flex-start;padding:28px;border-radius:var(--radius);background:linear-gradient(135deg,#141423 0%,#191936 100%);box-shadow:0 6px 28px rgba(0,0,0,.35)}
+    h1{color:#fff;margin:0;font-size:36px;letter-spacing:.2px}
+    p{color:var(--muted);line-height:1.6}
+    .btns{display:flex;gap:12px;flex-wrap:wrap}
+    .btn{display:inline-block;padding:12px 16px;border-radius:12px;text-decoration:none;font-weight:700}
+    .primary{background:var(--primary);color:#fff}
+    .ghost{background:#23233a;color:#dfe3f7}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:20px}
+    .card{background:#141423;border:1px solid #1f1f36;border-radius:var(--radius);padding:18px}
+    .mono{font-family:ui-monospace,SFMono,Menlo,Consolas,monospace;color:#cdd3ea;word-break:break-all}
+    .tag{display:inline-block;background:#1e2040;color:#c9d1ff;border:1px solid #2a2c5c;padding:4px 8px;border-radius:999px;font-size:12px;margin-right:6px}
+    .footer{margin-top:28px;color:#7f86a8;font-size:13px}
+    .addr{display:flex;align-items:center;gap:8px}
+    .copy{cursor:pointer;border:1px solid #2b2b4a;background:#1a1a33;color:#bfc6e8;border-radius:8px;padding:6px 8px;font-size:12px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <h1>DATAMINE — $DATA sur Polygon</h1>
+      <p>Reprends le contrôle de tes données. Un écosystème Web3 où l’utilisateur choisit ce qu’il partage et monétise ses données. $DATA est le jeton utilitaire du protocole.</p>
+      <div class="btns">
+        <a class="btn primary" href="https://quickswap.exchange/#/swap?inputCurrency=0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359&outputCurrency=0x79E1424617B0BeC83Ac00B59D39ED922e55E09f6" target="_blank" rel="noopener">Acheter $DATA (QuickSwap)</a>
+        <a class="btn ghost" href="https://dexscreener.com/polygon/0x6c2f35a80d219d48f30115537b549dcdcd321ad3" target="_blank" rel="noopener">Voir la pool (DexScreener)</a>
+        <a class="btn ghost" href="https://polygonscan.com/token/0x79E1424617B0BeC83Ac00B59D39ED922e55E09f6" target="_blank" rel="noopener">Contrat sur Polygonscan</a>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3 style="color:#fff;margin-top:0">Infos Token</h3>
+        <p><span class="tag">Nom</span> Datamine Token</p>
+        <p><span class="tag">Symbole</span> DATA</p>
+        <p><span class="tag">Réseau</span> Polygon (POL), Chain ID 137</p>
+        <p><span class="tag">Supply</span> 1&nbsp;000&nbsp;000&nbsp;000 DATA (fixe)</p>
+        <p class="addr"><span class="tag">Adresse</span> <span class="mono" id="dataAddr">0x79E1424617B0BeC83Ac00B59D39ED922e55E09f6</span>
+          <button class="copy" onclick="navigator.clipboard.writeText(document.getElementById('dataAddr').innerText)">Copier</button></p>
+      </div>
+
+      <div class="card">
+        <h3 style="color:#fff;margin-top:0">Acheter / Échanger</h3>
+        <p>Pair officielle : <b>DATA / USDC (native)</b></p>
+        <p class="addr"><span class="tag">USDC</span> <span class="mono" id="usdcAddr">0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359</span>
+          <button class="copy" onclick="navigator.clipboard.writeText(document.getElementById('usdcAddr').innerText)">Copier</button></p>
+        <p class="addr"><span class="tag">Pool</span> <span class="mono" id="poolAddr">0x6c2f35a80d219d48f30115537b549dcdcd321ad3</span>
+          <button class="copy" onclick="navigator.clipboard.writeText(document.getElementById('poolAddr').innerText)">Copier</button></p>
+        <p><a class="btn primary" href="https://quickswap.exchange/#/swap?inputCurrency=0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359&outputCurrency=0x79E1424617B0BeC83Ac00B59D39ED922e55E09f6" target="_blank" rel="noopener">Swap USDC → DATA</a></p>
+      </div>
+
+      <div class="card">
+        <h3 style="color:#fff;margin-top:0">Roadmap (phase 1)</h3>
+        <ul style="color:#cdd3ea;line-height:1.8;margin:0 0 0 16px">
+          <li>Listing pool DATA/USDC ✅</li>
+          <li>Page Claim Airdrop (en cours)</li>
+          <li>Staking $DATA (revenus du protocole)</li>
+          <li>API Starter / Pro (49 / 199 USDC)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px">
+      <h3 style="color:#fff;margin-top:0">Airdrop</h3>
+      <p>Vérifie ton éligibilité et réclame tes DATA :</p>
+      <p><a class="btn ghost" href="./claim.html">Ouvrir la page de claim</a> <span class="tag">Bientôt</span></p>
+    </div>
+
+    <div class="footer">
+      © DATAMINE — Polygon • Suivre les annonces : bientôt X / Telegram.
+    </div>
+  </div>
+</body>
+</html>
