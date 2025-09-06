@@ -32,10 +32,12 @@
     <div class="diag" id="diag">Diagnostic: en attente…</div>
 
     <label>Adresse du MerkleDistributor</label>
-    <input id="distributor" type="text" value="0xMERKLE_DISTRIBUTOR_ADDRESS_ICI" />
+    <!-- Laisse vide tant que le contrat n’est pas déployé (point 7B). -->
+    <input id="distributor" type="text" value="" placeholder="0xAdresseDuMerkleDistributor" />
 
     <label>URL de <code>claims.json</code></label>
-    <input id="claimsUrl" type="text" value="./claims.json" />
+    <!-- Déjà rempli avec ton URL publique -->
+    <input id="claimsUrl" type="text" value="https://mmmaaaccckkksss.github.io/datamine-site/claims.json" />
 
     <div class="row" style="margin-top:16px">
       <button id="connectBtn" class="primary">1) Connecter mon wallet</button>
@@ -59,7 +61,7 @@
     </div>
 
     <p class="small" style="margin-top:14px">
-      Place <code>claims.json</code> à la racine du site (même dossier que cette page) ou mets une URL complète.
+      Quand le MerkleDistributor sera déployé et approvisionné en DATA, colle son adresse dans le premier champ, recharge l’allocation et clique “Claim”.
     </p>
   </div>
 
@@ -81,122 +83,7 @@
       "function claim(uint256 amount, bytes32[] calldata proof) external"
     ];
 
+    // Helpers
+    const isHexAddress = (a) => /^0x[0-9a-fA-F]{40}$/.test((a||"").trim());
     const diag = document.getElementById('diag');
-    function setDiag(msg){ diag.textContent = 'Diagnostic: ' + msg; }
-
-    let provider, signer, account, claimsMap = null;
-    const connectBtn = document.getElementById('connectBtn');
-    const addrEl = document.getElementById('addr');
-    const networkBox = document.getElementById('networkBox');
-    const loadBtn = document.getElementById('loadBtn');
-    const allocEl = document.getElementById('alloc');
-    const eligBox = document.getElementById('eligBox');
-    const claimBtn = document.getElementById('claimBtn');
-    const statusEl = document.getElementById('status');
-
-    // Diagnostic au chargement
-    (function initDiag(){
-      const hasMM = typeof window.ethereum !== 'undefined';
-      const hasEthers = typeof window.ethers !== 'undefined';
-      setDiag((hasMM?'MetaMask détecté ✅':'MetaMask non détecté ❌') + ' | ' + (hasEthers?'ethers.js chargé ✅':'ethers.js non chargé ❌'));
-    })();
-
-    connectBtn.onclick = connect;
-    loadBtn.onclick = loadAllocation;
-    claimBtn.onclick = doClaim;
-
-    async function connect() {
-      try {
-        if (!window.ethereum) { alert('MetaMask non détecté. Installe l’extension et recharge la page.'); return; }
-        await ethereum.request({ method: 'eth_requestAccounts' });
-        if (!window.ethers) { alert('Problème de chargement d’ethers.js. Recharge la page (Ctrl+F5).'); return; }
-
-        provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
-        const network = await provider.getNetwork();
-
-        if (network.chainId !== 137) {
-          networkBox.innerHTML = 'Réseau: <b>'+network.name+'</b>. <span class="warn">Passe sur Polygon.</span> ';
-          const switchBtn = document.createElement('button');
-          switchBtn.textContent = 'Basculer sur Polygon';
-          switchBtn.className = 'ghost';
-          switchBtn.onclick = switchToPolygon;
-          networkBox.appendChild(switchBtn);
-        } else {
-          networkBox.innerHTML = '<span class="ok">Réseau Polygon détecté ✅</span>';
-        }
-
-        signer  = provider.getSigner();
-        account = await signer.getAddress();
-        addrEl.textContent = account;
-        setDiag('Connexion ok. Réseau chainId='+network.chainId);
-      } catch(e){
-        console.error(e);
-        alert('Connexion refusée ou erreur: '+(e?.message||e));
-        setDiag('Erreur connexion: '+(e?.message||e));
-      }
-    }
-
-    async function switchToPolygon() {
-      try {
-        await ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: POLYGON_CHAIN_ID }] });
-        networkBox.innerHTML = '<span class="ok">Réseau Polygon détecté ✅</span>';
-        setDiag('Basculé sur Polygon.');
-      } catch (e) {
-        if (e.code === 4902) {
-          await ethereum.request({ method: 'wallet_addEthereumChain', params: [POLYGON_PARAMS] });
-          networkBox.innerHTML = '<span class="ok">Réseau Polygon ajouté ✅</span>';
-          setDiag('Réseau ajouté.');
-        } else {
-          alert('Switch annulé : '+e.message);
-          setDiag('Switch annulé: '+e.message);
-        }
-      }
-    }
-
-    async function loadAllocation() {
-      try {
-        statusEl.textContent = ''; eligBox.textContent = ''; allocEl.textContent = 'Chargement…';
-        const distributorAddr = (document.getElementById('distributor').value||'').trim();
-        const claimsUrl = (document.getElementById('claimsUrl').value||'').trim();
-        if (!distributorAddr || !claimsUrl) { allocEl.textContent=''; alert('Renseigne MerkleDistributor et l’URL de claims.json'); return; }
-
-        const res = await fetch(claimsUrl, { cache:'no-store' });
-        if (!res.ok) throw new Error('Impossible de charger claims.json');
-        claimsMap = await res.json();
-
-        if (!account) { allocEl.textContent=''; alert('Connecte ton wallet d’abord.'); return; }
-        const key = account.toLowerCase();
-        if (!claimsMap[key]) { allocEl.textContent=''; eligBox.innerHTML='<span class="err">Adresse non éligible.</span>'; return; }
-
-        const { amount, proof } = claimsMap[key];
-        const amountHuman = ethers.utils.formatUnits(amount, 18);
-        allocEl.innerHTML = `Éligible: <b>${amountHuman} DATA</b>`;
-
-        const c = new ethers.Contract(distributorAddr, MERKLE_ABI, provider);
-        const already = await c.claimed(account);
-        eligBox.innerHTML = already ? '<span class="warn">Déjà réclamé ✅</span>' : '<span class="ok">Non réclamé — prêt à claim</span>';
-      } catch(e){ allocEl.textContent=''; eligBox.innerHTML='<span class="err">Erreur: '+(e?.message||e)+'</span>'; setDiag('Erreur load: '+(e?.message||e)); }
-    }
-
-    async function doClaim() {
-      try {
-        statusEl.textContent = 'Préparation…';
-        const distributorAddr = (document.getElementById('distributor').value||'').trim();
-        const claimsUrl = (document.getElementById('claimsUrl').value||'').trim();
-        if (!account || !signer) { alert('Connecte ton wallet.'); statusEl.textContent=''; return; }
-        if (!claimsMap) { await loadAllocation(); if (!claimsMap) return; }
-        const entry = claimsMap[account.toLowerCase()];
-        if (!entry) { statusEl.innerHTML = '<span class="err">Adresse non éligible.</span>'; return; }
-
-        const { amount, proof } = entry;
-        const contract = new ethers.Contract(distributorAddr, MERKLE_ABI, signer);
-        const tx = await contract.claim(amount, proof);
-        statusEl.textContent = 'Tx envoyée: '+tx.hash+' (en attente…)';
-        const rec = await tx.wait();
-        statusEl.innerHTML = rec.status===1 ? '<span class="ok">Claim réussi ✅</span>' : '<span class="err">Échec de la transaction.</span>';
-        if (rec.status===1) await loadAllocation();
-      } catch(e){ statusEl.innerHTML = '<span class="err">Erreur: '+(e?.message||e)+'</span>'; setDiag('Erreur claim: '+(e?.message||e)); }
-    }
-  </script>
-</body>
-</html>
+    function setDiag(msg){ diag.textContent = 'Diagnostic: '
