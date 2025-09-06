@@ -4,18 +4,22 @@
   <meta charset="utf-8" />
   <title>DATAMINE — Reprends le contrôle de tes données</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Datamine ($DATA) — Token utilitaire sur Polygon. Reprends le contrôle de tes données et monétise-les." />
+  <meta name="description" content="Datamine ($DATA) — Token utilitaire sur Polygon. Reprends le controle de tes donnees et monetise-les." />
 
-  <!-- Favicon & PWA -->
+  <!-- Favicons (essaie /assets puis racine) -->
   <link rel="icon" href="./assets/favicon.ico" sizes="any">
+  <link rel="icon" href="./favicon.ico" sizes="any">
   <link rel="icon" href="./assets/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="./favicon-32.png" type="image/png" sizes="32x32">
   <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
 
-  <!-- Open Graph / Twitter -->
+  <!-- Open Graph / Twitter (essaie /assets puis racine) -->
   <meta property="og:title" content="DATAMINE - $DATA sur Polygon">
   <meta property="og:description" content="Reprends le controle de tes donnees. Claim - Swap - Contrat.">
   <meta property="og:url" content="https://mmmaaaccckkksss.github.io/datamine-site/">
   <meta property="og:image" content="https://mmmaaaccckkksss.github.io/datamine-site/assets/og-image.png">
+  <meta property="og:image:alt" content="DATAMINE">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://mmmaaaccckkksss.github.io/datamine-site/assets/twitter-card.png">
 
@@ -46,10 +50,16 @@
 <body>
   <div class="wrap">
     <div class="hero">
-      <img src="./assets/logo-approved.png" alt="DATAMINE" width="64" height="64" style="display:block;margin-bottom:8px">
+      <!-- Logo: tente /assets puis racine -->
+      <img src="./assets/logo-approved.png" onerror="this.onerror=null;this.src='./logo-approved.png';"
+           alt="DATAMINE" width="64" height="64" style="display:block;margin-bottom:8px">
       <h1>DATAMINE - $DATA sur Polygon</h1>
-      <img class="banner" src="./assets/datamine-banner-1200x300.png" alt="Datamine">
-      <p>Reprends le controle de tes donnees. Un écosystème Web3 où l’utilisateur choisit ce qu’il partage et monétise ses données. $DATA est le jeton utilitaire du protocole.</p>
+
+      <!-- Bannière: tente /assets puis racine -->
+      <img class="banner" src="./assets/datamine-banner-1200x300.png"
+           onerror="this.onerror=null;this.src='./datamine-banner-1200x300.png';" alt="Datamine">
+
+      <p>Reprends le controle de tes donnees. Un ecosystème Web3 où l’utilisateur choisit ce qu’il partage et monétise ses données. $DATA est le jeton utilitaire du protocole.</p>
       <div class="btns">
         <a class="btn primary" href="https://dapp.quickswap.exchange/#/swap?inputCurrency=0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359&outputCurrency=0x79E1424617B0BeC83Ac00B59D39ED922e55E09f6" target="_blank" rel="noopener">Acheter $DATA (QuickSwap)</a>
         <a class="btn ghost" href="https://www.geckoterminal.com/polygon_pos/pools/0x6c2f35a80d219d48f30115537b549dcdcd321ad3" target="_blank" rel="noopener">Voir la pool (GeckoTerminal)</a>
@@ -108,13 +118,8 @@
       try{
         await window.ethereum.request({
           method: 'wallet_watchAsset',
-          params: {
-            type: 'ERC20',
-            options: {
-              address: '0x79E1424617B0BeC83Ac00B59D39ED922e55E09f6',
-              symbol: 'DATA',
-              decimals: 18
-            }
+          params: { type: 'ERC20',
+            options: { address: '0x79E1424617B0BeC83Ac00B59D39ED922e55E09f6', symbol: 'DATA', decimals: 18 }
           }
         });
       }catch(e){ alert('Ajout refusé: ' + (e?.message||e)); }
