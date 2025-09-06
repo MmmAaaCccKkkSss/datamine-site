@@ -5,38 +5,37 @@
   <title>DATAMINE — Claim Airdrop</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, Helvetica, sans-serif; margin: 0; padding: 24px; background:#0b0b12; color:#e9ecf5;}
-    .card { max-width: 760px; margin: 0 auto; border: 1px solid #1f1f36; border-radius: 14px; padding: 24px; background:#141423; box-shadow:0 6px 28px rgba(0,0,0,.35);}
-    h1 { margin-top: 0; }
-    label { display:block; font-size:14px; margin: 12px 0 6px; color:#cdd3ea;}
-    input[type="text"] { width:100%; padding:10px 12px; border:1px solid #2b2b4a; border-radius:10px; font-size:14px; background:#0f1020; color:#dfe3f7;}
+    body { font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,Helvetica,sans-serif; margin:0; padding:24px; background:#0b0b12; color:#e9ecf5;}
+    .card { max-width: 760px; margin: 0 auto; border:1px solid #1f1f36; border-radius:14px; padding:24px; background:#141423; box-shadow:0 6px 28px rgba(0,0,0,.35); }
+    h1 { margin-top:0; }
+    label { display:block; font-size:14px; margin:12px 0 6px; color:#cdd3ea; }
+    input[type="text"] { width:100%; padding:10px 12px; border:1px solid #2b2b4a; border-radius:10px; font-size:14px; background:#0f1020; color:#dfe3f7; }
     button { padding:12px 16px; border:0; border-radius:10px; cursor:pointer; font-weight:600; }
     .primary { background:#6b5bff; color:#fff; }
     .ghost { background:#1a1a33; color:#dfe3f7; }
-    .row { display:flex; gap:12px; align-items:center; flex-wrap: wrap; }
+    .row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
     .muted { color:#9aa0b3; font-size:13px; }
     .ok { color:#1BC7B1; }
     .warn { color:#ffb74d; }
     .err { color:#ff6b6b; }
-    .mono { font-family: ui-monospace, SFMono, Menlo, Consolas, monospace; }
-    .hr { height:1px; background:#1f1f36; margin: 16px 0; }
-    .small { font-size:12px; color:#9aa0b3;}
-    .diag { margin-top:10px; font-size:12px; color:#9aa0b3 }
+    .mono { font-family: ui-monospace,SFMono,Menlo,Consolas,monospace; }
+    .hr { height:1px; background:#1f1f36; margin:16px 0; }
+    .small { font-size:12px; color:#9aa0b3; }
+    .diag { margin-top:10px; font-size:12px; color:#9aa0b3; white-space:pre-line; }
   </style>
 </head>
 <body>
   <div class="card">
     <h1>DATAMINE — Claim Airdrop</h1>
-    <p class="muted">Réclame tes <b>DATA</b> en connectant ton wallet Polygon (chain 137). Cette page appelle uniquement <code>claim(uint256, bytes32[])</code> du contrat MerkleDistributor.</p>
+    <p class="muted">Réclame tes <b>DATA</b> en connectant ton wallet Polygon (chain 137). La page appelle uniquement <code>claim(uint256, bytes32[])</code> du contrat MerkleDistributor.</p>
 
-    <div class="diag" id="diag">Diagnostic: en attente…</div>
+    <div class="diag" id="diag">Diagnostic: chargement…</div>
 
     <label>Adresse du MerkleDistributor</label>
-    <!-- Laisse vide tant que le contrat n’est pas déployé (point 7B). -->
+    <!-- Laisse vide tant que le contrat n’est pas déployé (7B). -->
     <input id="distributor" type="text" value="" placeholder="0xAdresseDuMerkleDistributor" />
 
     <label>URL de <code>claims.json</code></label>
-    <!-- Déjà rempli avec ton URL publique -->
     <input id="claimsUrl" type="text" value="https://mmmaaaccckkksss.github.io/datamine-site/claims.json" />
 
     <div class="row" style="margin-top:16px">
@@ -61,15 +60,16 @@
     </div>
 
     <p class="small" style="margin-top:14px">
-      Quand le MerkleDistributor sera déployé et approvisionné en DATA, colle son adresse dans le premier champ, recharge l’allocation et clique “Claim”.
+      Quand le MerkleDistributor sera déployé et approvisionné en DATA, colle son adresse 0x… ci-dessus, recharge l’allocation et clique “Claim”.
     </p>
   </div>
 
-  <!-- Ethers.js v5 — double CDN pour fiabilité -->
+  <!-- Ethers.js v5 — double CDN + logs -->
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js" crossorigin="anonymous"></script>
   <script>if(typeof ethers==="undefined"){document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"><\/script>')}</script>
 
   <script>
+    // --- Utils & état ---
     const POLYGON_CHAIN_ID = '0x89'; // 137
     const POLYGON_PARAMS = {
       chainId: POLYGON_CHAIN_ID,
@@ -82,8 +82,48 @@
       "function claimed(address) view returns (bool)",
       "function claim(uint256 amount, bytes32[] calldata proof) external"
     ];
-
-    // Helpers
     const isHexAddress = (a) => /^0x[0-9a-fA-F]{40}$/.test((a||"").trim());
-    const diag = document.getElementById('diag');
-    function setDiag(msg){ diag.textContent = 'Diagnostic: '
+    const log = (...a) => { console.log(...a); const d = document.getElementById('diag'); d.textContent += '\\n' + a.map(x=> (typeof x==='string'?x:JSON.stringify(x))).join(' '); };
+
+    let provider, signer, account, claimsMap = null;
+    let connectBtn, loadBtn, claimBtn, addrEl, networkBox, allocEl, eligBox, statusEl;
+
+    // --- Liaison après chargement DOM ---
+    window.addEventListener('DOMContentLoaded', () => {
+      connectBtn = document.getElementById('connectBtn');
+      loadBtn    = document.getElementById('loadBtn');
+      claimBtn   = document.getElementById('claimBtn');
+      addrEl     = document.getElementById('addr');
+      networkBox = document.getElementById('networkBox');
+      allocEl    = document.getElementById('alloc');
+      eligBox    = document.getElementById('eligBox');
+      statusEl   = document.getElementById('status');
+
+      const hasMM = typeof window.ethereum !== 'undefined';
+      const hasEthers = typeof window.ethers !== 'undefined';
+      document.getElementById('diag').textContent =
+        `Diagnostic: ${hasMM?'MetaMask détecté ✅':'MetaMask non détecté ❌'} | ${hasEthers?'ethers.js chargé ✅':'ethers.js non chargé ❌'}`;
+
+      connectBtn?.addEventListener('click', () => { log('CLICK_CONNECT'); connect().catch(e=>log('CONNECT_ERR', e.message||e)); });
+      loadBtn?.addEventListener('click', () => { log('CLICK_LOAD'); loadAllocation().catch(e=>log('LOAD_ERR', e.message||e)); });
+      claimBtn?.addEventListener('click', () => { log('CLICK_CLAIM'); doClaim().catch(e=>log('CLAIM_ERR', e.message||e)); });
+    });
+
+    // --- Connexion ---
+    async function connect() {
+      if (!window.ethereum) { alert('MetaMask non détecté. Active l’extension dans Edge.'); return; }
+      await ethereum.request({ method: 'eth_requestAccounts' });
+
+      if (!window.ethers) { alert('Problème de chargement d’ethers.js. Recharge la page (Ctrl+F5).'); return; }
+
+      provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
+      const network = await provider.getNetwork();
+      log('NETWORK', network);
+
+      if (network.chainId !== 137) {
+        networkBox.innerHTML = 'Réseau: <b>'+network.name+'</b>. <span class="warn">Passe sur Polygon.</span> ';
+        const switchBtn = document.createElement('button');
+        switchBtn.textContent = 'Basculer sur Polygon';
+        switchBtn.className = 'ghost';
+        switchBtn.onclick = switchToPolygon;
+        networkBox.appendChild(switchBtn);
