@@ -27,12 +27,11 @@
 <body>
   <div class="card">
     <h1>DATAMINE — Claim Airdrop</h1>
-    <p class="muted">Réclame tes <b>DATA</b> en connectant ton wallet Polygon (chain 137). La page appelle uniquement <code>claim(uint256, bytes32[])</code> du contrat MerkleDistributor.</p>
+    <p class="muted">Réclame tes <b>DATA</b> en connectant ton wallet Polygon (chain 137). Cette page appelle uniquement <code>claim(uint256, bytes32[])</code> du contrat MerkleDistributor.</p>
 
     <div class="diag" id="diag">Diagnostic: chargement…</div>
 
     <label>Adresse du MerkleDistributor</label>
-    <!-- Laisse vide tant que le contrat n’est pas déployé (7B). -->
     <input id="distributor" type="text" value="" placeholder="0xAdresseDuMerkleDistributor" />
 
     <label>URL de <code>claims.json</code></label>
@@ -64,66 +63,8 @@
     </p>
   </div>
 
-  <!-- Ethers.js v5 — double CDN + logs -->
+  <!-- Ethers.js v5 (CDN) -->
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js" crossorigin="anonymous"></script>
-  <script>if(typeof ethers==="undefined"){document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"><\/script>')}</script>
-
-  <script>
-    // --- Utils & état ---
-    const POLYGON_CHAIN_ID = '0x89'; // 137
-    const POLYGON_PARAMS = {
-      chainId: POLYGON_CHAIN_ID,
-      chainName: 'Polygon Mainnet',
-      nativeCurrency: { name:'POL', symbol:'POL', decimals:18 },
-      rpcUrls: ['https://polygon-rpc.com/'],
-      blockExplorerUrls: ['https://polygonscan.com/']
-    };
-    const MERKLE_ABI = [
-      "function claimed(address) view returns (bool)",
-      "function claim(uint256 amount, bytes32[] calldata proof) external"
-    ];
-    const isHexAddress = (a) => /^0x[0-9a-fA-F]{40}$/.test((a||"").trim());
-    const log = (...a) => { console.log(...a); const d = document.getElementById('diag'); d.textContent += '\\n' + a.map(x=> (typeof x==='string'?x:JSON.stringify(x))).join(' '); };
-
-    let provider, signer, account, claimsMap = null;
-    let connectBtn, loadBtn, claimBtn, addrEl, networkBox, allocEl, eligBox, statusEl;
-
-    // --- Liaison après chargement DOM ---
-    window.addEventListener('DOMContentLoaded', () => {
-      connectBtn = document.getElementById('connectBtn');
-      loadBtn    = document.getElementById('loadBtn');
-      claimBtn   = document.getElementById('claimBtn');
-      addrEl     = document.getElementById('addr');
-      networkBox = document.getElementById('networkBox');
-      allocEl    = document.getElementById('alloc');
-      eligBox    = document.getElementById('eligBox');
-      statusEl   = document.getElementById('status');
-
-      const hasMM = typeof window.ethereum !== 'undefined';
-      const hasEthers = typeof window.ethers !== 'undefined';
-      document.getElementById('diag').textContent =
-        `Diagnostic: ${hasMM?'MetaMask détecté ✅':'MetaMask non détecté ❌'} | ${hasEthers?'ethers.js chargé ✅':'ethers.js non chargé ❌'}`;
-
-      connectBtn?.addEventListener('click', () => { log('CLICK_CONNECT'); connect().catch(e=>log('CONNECT_ERR', e.message||e)); });
-      loadBtn?.addEventListener('click', () => { log('CLICK_LOAD'); loadAllocation().catch(e=>log('LOAD_ERR', e.message||e)); });
-      claimBtn?.addEventListener('click', () => { log('CLICK_CLAIM'); doClaim().catch(e=>log('CLAIM_ERR', e.message||e)); });
-    });
-
-    // --- Connexion ---
-    async function connect() {
-      if (!window.ethereum) { alert('MetaMask non détecté. Active l’extension dans Edge.'); return; }
-      await ethereum.request({ method: 'eth_requestAccounts' });
-
-      if (!window.ethers) { alert('Problème de chargement d’ethers.js. Recharge la page (Ctrl+F5).'); return; }
-
-      provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
-      const network = await provider.getNetwork();
-      log('NETWORK', network);
-
-      if (network.chainId !== 137) {
-        networkBox.innerHTML = 'Réseau: <b>'+network.name+'</b>. <span class="warn">Passe sur Polygon.</span> ';
-        const switchBtn = document.createElement('button');
-        switchBtn.textContent = 'Basculer sur Polygon';
-        switchBtn.className = 'ghost';
-        switchBtn.onclick = switchToPolygon;
-        networkBox.appendChild(switchBtn);
+  <script src="./claim.js" defer></script>
+</body>
+</html>
