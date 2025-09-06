@@ -5,17 +5,24 @@
   <title>DATAMINE — Reprends le contrôle de tes données</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Datamine ($DATA) — Token utilitaire sur Polygon. Reprends le contrôle de tes données et monétise-les." />
-  <meta property="og:title" content="DATAMINE — $DATA sur Polygon" />
-  <meta property="og:description" content="Reprends le contrôle de tes données. Swap, pool, contrat, claim (airdrop)." />
-  <meta property="og:url" content="https://mmmaaaccckkksss.github.io/datamine-site/" />
+
+  <!-- Favicon & PWA -->
+  <link rel="icon" href="./assets/favicon.ico" sizes="any">
+  <link rel="icon" href="./assets/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:title" content="DATAMINE - $DATA sur Polygon">
+  <meta property="og:description" content="Reprends le controle de tes donnees. Claim - Swap - Contrat.">
+  <meta property="og:url" content="https://mmmaaaccckkksss.github.io/datamine-site/">
+  <meta property="og:image" content="https://mmmaaaccckkksss.github.io/datamine-site/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://mmmaaaccckkksss.github.io/datamine-site/assets/twitter-card.png">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg:#0b0b12; --card:#141423; --muted:#9aa0b3; --text:#e9ecf5;
-      --primary:#6b5bff; --accent:#1bc7b1; --ok:#0a7d2e; --warn:#b46a00; --err:#c62828;
-      --radius:14px;
-    }
+    :root { --bg:#0b0b12; --card:#141423; --muted:#9aa0b3; --text:#e9ecf5; --primary:#6b5bff; --accent:#1bc7b1; --radius:14px; }
     *{box-sizing:border-box}
     body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#0b0b12,#0f1020);}
     .wrap{max-width:1100px;margin:0 auto;padding:28px}
@@ -33,13 +40,16 @@
     .footer{margin-top:28px;color:#7f86a8;font-size:13px}
     .addr{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
     .copy{cursor:pointer;border:1px solid #2b2b4a;background:#1a1a33;color:#bfc6e8;border-radius:8px;padding:6px 8px;font-size:12px}
+    .banner{width:100%;border-radius:12px;margin:18px 0}
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="hero">
-      <h1>DATAMINE — $DATA sur Polygon</h1>
-      <p>Reprends le contrôle de tes données. Un écosystème Web3 où l’utilisateur choisit ce qu’il partage et monétise ses données. $DATA est le jeton utilitaire du protocole.</p>
+      <img src="./assets/logo-approved.png" alt="DATAMINE" width="64" height="64" style="display:block;margin-bottom:8px">
+      <h1>DATAMINE - $DATA sur Polygon</h1>
+      <img class="banner" src="./assets/datamine-banner-1200x300.png" alt="Datamine">
+      <p>Reprends le controle de tes donnees. Un écosystème Web3 où l’utilisateur choisit ce qu’il partage et monétise ses données. $DATA est le jeton utilitaire du protocole.</p>
       <div class="btns">
         <a class="btn primary" href="https://dapp.quickswap.exchange/#/swap?inputCurrency=0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359&outputCurrency=0x79E1424617B0BeC83Ac00B59D39ED922e55E09f6" target="_blank" rel="noopener">Acheter $DATA (QuickSwap)</a>
         <a class="btn ghost" href="https://www.geckoterminal.com/polygon_pos/pools/0x6c2f35a80d219d48f30115537b549dcdcd321ad3" target="_blank" rel="noopener">Voir la pool (GeckoTerminal)</a>
@@ -81,20 +91,10 @@
       </div>
 
       <div class="card">
-        <h3 style="color:#fff;margin-top:0">Roadmap (phase 1)</h3>
-        <ul style="color:#cdd3ea;line-height:1.8;margin:0 0 0 16px">
-          <li>Listing pool DATA/USDC ✅</li>
-          <li>Page Claim Airdrop ✅</li>
-          <li>Staking $DATA (revenus du protocole)</li>
-          <li>API Starter / Pro (49 / 199 USDC)</li>
-        </ul>
+        <h3 style="color:#fff;margin-top:0">Airdrop</h3>
+        <p>Vérifie ton éligibilité et réclame tes DATA :</p>
+        <p><a class="btn ghost" href="./claim.html?ver=final">Ouvrir la page de claim</a> <span class="tag">Pré-remplie</span></p>
       </div>
-    </div>
-
-    <div class="card" style="margin-top:20px">
-      <h3 style="color:#fff;margin-top:0">Airdrop</h3>
-      <p>Vérifie ton éligibilité et réclame tes DATA :</p>
-      <p><a class="btn ghost" href="./claim.html?ver=final">Ouvrir la page de claim</a> <span class="tag">Pré-remplie</span></p>
     </div>
 
     <div class="footer">
