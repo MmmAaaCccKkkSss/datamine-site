@@ -27,7 +27,7 @@
 <body>
   <div class="card">
     <h1>DATAMINE — Claim Airdrop</h1>
-    <p class="muted">Réclame tes <b>DATA</b> en connectant ton wallet Polygon (chain 137). La page appelle uniquement <code>claim(uint256, bytes32[])</code> du contrat MerkleDistributor.</p>
+    <p class="muted">Réclame tes <b>DATA</b> en connectant ton wallet Polygon (chain 137). Cette page appelle uniquement <code>claim(uint256, bytes32[])</code> du contrat MerkleDistributor.</p>
 
     <div class="diag" id="diag">Diagnostic: chargement…</div>
 
@@ -59,7 +59,7 @@
     </div>
 
     <p class="small" style="margin-top:14px">
-      Si “invalid proof” apparaît : regénère `claims.json` + `merkle-root.txt` ensemble et redéploie le MerkleDistributor avec le nouveau root.  
+      Si “invalid proof” apparaît : régénère <code>claims.json</code> + <code>merkle-root.txt</code> ensemble et redéploie le MerkleDistributor avec le nouveau root.  
       Si “transfer failed” : envoie plus de DATA au contrat.
     </p>
   </div>
